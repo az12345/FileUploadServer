@@ -14,9 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,19 +45,22 @@ public class UploadFileController {
     @GetMapping("/getallfiles")
     public ResponseEntity<List<String>> getListFiles(){
         ArrayList<String> listfile = new ArrayList();
-        try {
-            Stream<Path> stream =Files.list(Paths.get(".\\uploadFiles\\"));
-//            Collections.addAll(listfile,  stream.);
-//            Files.list(Paths.get(".\\uploadFiles\\"))
-//                    .forEach(System.out::println);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Path dir =  Paths.get(".\\uploadFiles");
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+            for (Path file: stream) {
+                listfile.add(file.getFileName().toString());
+                System.out.println(file.getFileName());
+            }
+        } catch (IOException | DirectoryIteratorException x) {
+            // IOException can never be thrown by the iteration.
+            // In this snippet, it can only be thrown by newDirectoryStream.
+            System.err.println(x);
         }
         List<String> filesname=uploadFiles
 				.stream().map(fileName -> MvcUriComponentsBuilder
                 .fromMethodName(UploadFileController.class, "getFile", fileName).build().toString())
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(uploadFiles);
+        return ResponseEntity.ok().body(listfile);
     }
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
