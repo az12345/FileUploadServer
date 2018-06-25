@@ -59,7 +59,7 @@ public class UploadFileController {
 				.stream().map(fileName -> MvcUriComponentsBuilder
                 .fromMethodName(UploadFileController.class, "getFile", fileName).build().toString())
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(listfile);
+        return ResponseEntity.ok().body(uploadFiles);
     }
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
