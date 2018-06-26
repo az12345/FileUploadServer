@@ -46,7 +46,7 @@ public class UploadFileController {
     @GetMapping("/getallfiles")
     public ResponseEntity<List<String>> getListFiles(){
         ArrayList<String> listfile = new ArrayList();
-        Path dir =  Paths.get("uploadFiles", String.valueOf(Charset.forName("UTF-8")));
+        Path dir =  Paths.get("uploadFiles");
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path file: stream) {
                 listfile.add(file.getFileName().toString());
