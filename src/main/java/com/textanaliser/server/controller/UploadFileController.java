@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +46,7 @@ public class UploadFileController {
     @GetMapping("/getallfiles")
     public ResponseEntity<List<String>> getListFiles(){
         ArrayList<String> listfile = new ArrayList();
-        Path dir =  Paths.get("uploadFiles");
+        Path dir =  Paths.get("uploadFiles", String.valueOf(Charset.forName("UTF-8")));
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path file: stream) {
                 listfile.add(file.getFileName().toString());
